@@ -92,6 +92,11 @@ class LiveCapture(Capture):
         self._created_new_process(dumpcap_params, dumpcap_process, process_name="Dumpcap")
 
         tshark = await super(LiveCapture, self)._get_tshark_process(packet_count=packet_count, stdin=read)
+        
+        ## close read and write in order to avoid orphaned files after every capture.sniff()
+        os.close(read)
+        os.close(write)
+        
         return tshark
 
     # Backwards compatibility
